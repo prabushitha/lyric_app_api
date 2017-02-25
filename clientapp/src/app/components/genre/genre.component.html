@@ -1,0 +1,98 @@
+<div class="container">
+  <!-- Modal To Add new genre -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title" id="exampleModalLongTitle">Add a new genre</h3>
+        </div>
+        <form [formGroup]="addForm" (ngSubmit)="doAdd($event)">
+          <div class="modal-body">
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">Genre Name</span>
+              <input formControlName="name" type="text" class="form-control" placeholder="eg. Hipop" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">Sinhala Name</span>
+              <input formControlName="si_name" type="text" class="form-control" placeholder="eg. හිපොප්" aria-describedby="basic-addon1">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- END MODAL -->
+  <!-- Modal To Edit genre -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title" id="exampleModalLongTitle">Edit genre</h3>
+        </div>
+        <form [formGroup]="editForm" (ngSubmit)="doEdit($event)">
+          <div class="modal-body">
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">Genre Name</span>
+              <input id="sel_name" formControlName="name" type="text" class="form-control" placeholder="eg. Hipop" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">Sinhala Name</span>
+              <input id="sel_siname" formControlName="si_name" type="text" class="form-control" placeholder="eg. හිපොප්" aria-describedby="basic-addon1">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Edit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- END MODAL -->
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>{{title}}</h3>
+    </div>
+    <div class="col-sm-6">
+      <form class="navbar-form navbar-left pull-right" role="search">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for genre">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">Search</button>
+          </span>
+        </div><!-- /input-group -->
+  		</form>
+      <a href="#new" class="btn btn-primary pull-right topspace" data-toggle="modal" data-target="#addModal">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        New
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3" *ngFor="let genre of genres">
+      <div class="thumbnail">
+        <img src="assets/images/patternline.png" alt="...">
+        <div class="caption">
+          <h3>{{genre.name}}</h3>
+          <h5>{{genre.si_name}}</h5>
+          <p>Created on : <br/><b>{{genre.created_date}}</b></p>
+          <p>ID : <br/><b>{{genre._id}}</b></p>
+          <p>
+            <button class="btn btn-primary" role="button" (click)="setSelectId(genre._id)" data-toggle="modal" data-target="#editModal">Edit</button>
+            <button (click)="doDelete(genre._id)" class="btn btn-danger" role="button">Delete</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
