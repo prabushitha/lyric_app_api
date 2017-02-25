@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var async = require('async');
 
 //using body parser
 app.use(bodyParser.json());
@@ -100,13 +101,43 @@ app.delete('/api/genre/:_id',function(req,res){
 */
 //create api route to get all lyrics
 app.get('/api/lyric',function(req,res){
-	Lyric.getLyrics(function(err,genres){
+	Lyric.getLyrics({},10000,0,function(err,genres){
 		if(err){
 			throw err;
 		}
 		console.log("Get all genres request");
 		res.json(genres);
-	});
+	},{});
+});
+//create api route to get all lyrics with specific keyword
+app.get('/api/lyric/keyword/:_keyword/:_limit/:_page',function(req,res){
+	//{$or:[{title:/a/},{si_title:/a/}]}
+	var queryjson = {
+		$or:[
+				{title:new RegExp(req.params._keyword)},
+				{si_title:new RegExp(req.params._keyword)}
+			]
+	};
+	console.log(queryjson);
+	//async.parallel runs 2 functions at once under same conditions
+	async.parallel([Lyric.getLyrics.bind(null,queryjson,req.params._limit,req.params._page), Lyric.getLyricCount.bind(null,queryjson)], function(err, results){
+         res.json({totalcount: results[1], lyrics: results[0]});
+
+    });
+});
+
+//create api route to get all lyrics
+app.get('/api/lyric/:_limit/:_page',function(req,res){
+	//async.parallel runs 2 functions at once under same conditions
+	async.parallel([Lyric.getLyrics.bind(null,{},req.params._limit,req.params._page), Lyric.getLyricCount.bind(null,{})], function(err, results){
+         //err contains the array of error of all the functions
+         //results contains an array of all the results
+         //results[0] will contain value from getLyrics function
+         //results[1] will contain value from getLyricCount function
+         //You can send the results as
+         res.json({totalcount: results[1], lyrics: results[0]});
+
+    });
 });
 
 //create api route to get single genre by id

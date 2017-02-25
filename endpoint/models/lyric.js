@@ -40,8 +40,11 @@ var Lyric = mongoose.model(
 	'lyric' //collection name
 	);
 //get genres
-Lyric.getLyrics = function (callback,limit){
-	Lyric.find(callback).limit(limit);
+Lyric.getLyrics = function (queryjson,limit,page,callback){
+	Lyric.find(queryjson,callback).limit(limit*1).skip(limit*page);
+};
+Lyric.getLyricCount = function (queryjson,callback){
+	Lyric.count(queryjson,callback);
 };
 Lyric.getLyricById = function(id,callback){
 	Lyric.findById(id,callback);
